@@ -51,14 +51,14 @@ add_subdirectory(external/glbinding-2.1.1)
 
 # create framework helper library 
 file(GLOB FRAMEWORK_SOURCES framework/source/*.cpp)
-add_library(framework STATIC ${FRAMEWORK_SOURCES} ${TINYOBJLOADER_SOURCES})
+add_library(framework STATIC ${FRAMEWORK_SOURCES} ${TINYOBJLOADER_SOURCES} "framework/source/node.cpp" "framework/source/scene_graph.cpp" "framework/source/geometry_node.cpp" "framework/source/camera_node.cpp")
 target_include_directories(framework PUBLIC framework/include)
 target_link_libraries(framework glbinding glfw ${GLFW_LIBRARIES})
 
 # include headers in all following applications
 include_directories(application/include)
 
-add_executable(solar_system application/source/application_solar.cpp)
+add_executable(solar_system application/source/application_solar.cpp "framework/source/node.cpp" "framework/source/scene_graph.cpp" "framework/source/geometry_node.cpp" "framework/source/camera_node.cpp")
 target_link_libraries(solar_system framework)
 
 # MacOS doesnt support simple compat mode required for examples
