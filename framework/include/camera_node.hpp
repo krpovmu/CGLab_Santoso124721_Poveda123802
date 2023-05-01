@@ -4,14 +4,34 @@
 
 #include<glm/glm.hpp>
 
-class CameraNode {
+class CameraNode : Public Node{
 
 private:
 	bool isPerspective;//bool isPerspective
 	bool isEnabled;//boll isEnabled
-	glm::mat4 projectionMatrix;//mat4 projectionMatrix
+	glm::fmat4 projectionMatrix;//mat4 projectionMatrix
 
 public:
+	CameraNode();
+
+	CameraNode(
+		bool isPerspective, 
+		bool isEnabled, 
+		glm::fmat4 projectionMatrix
+	);
+	
+	CameraNode(
+		std::shared_ptr<Node> parent, 
+		std::string name
+	);
+
+	bool getPerspective();
+	bool getEnabled();
+	glm::fmat4 getProjectionMatrix();
+
+	void setEnabled(bool isEnabled);
+	void setProjectionMatrix(glm::fmat4 projectionMatrix);
+
 
 };
 
