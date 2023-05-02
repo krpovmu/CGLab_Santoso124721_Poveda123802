@@ -115,7 +115,8 @@ void Node::addChild(std::shared_ptr<Node> const& node){
 // remove one child
 void Node::removeChild(std::string const& childName){
     for(std::shared_ptr<Node> child : children_){
-        if(child->getName()._Equal(childName)){
+        //if(child->getName()._Equal(childName)){
+        if(child->getName()==childName){
             children_.remove(child);
         }
     }
