@@ -5,53 +5,40 @@
 #include <string>
 #include <memory>
 #include "node.hpp"
-//#include "geometry_node.hpp"
-//#include "camera_node.hpp"
 
 class SceneGraph {
 private:
-	// attributes
-	std::string name_;
-	std::shared_ptr<Node> rootNode_;
-	//std::list<std::shared_ptr<GeometryNode>> planets_;
+    // attributes
+    std::string name_;
+    std::shared_ptr<Node> rootNode_;
 
- public:
-  // constructors
-  SceneGraph();
+public:
+    // constructors
+    SceneGraph();
 
-  SceneGraph(
-	  std::string const& name
-  );
+    SceneGraph(
+            std::string const& name
+            );
 
-  SceneGraph(
-	  std::string const& name, 
-	  std::shared_ptr<Node> const& rootNode
-  );
+    SceneGraph(
+            std::string const& name, 
+            std::shared_ptr<Node> const& rootNode
+            );
 
-  // get attribute methods
-  std::string getName() const;
-  std::shared_ptr<Node> getRoot() const;
-  
-  //std::list<std::shared_ptr<GeometryNode>> getPlanets() const;
+    // get attribute methods
+    std::string getName() const;
+    std::shared_ptr<Node> getRoot() const;
 
-  // set attribute methods
-  void setName(std::string const& name);
-  void setRoot(std::shared_ptr<Node> const& rootNode);
+    // set attribute methods
+    void setName(std::string const& name);
+    void setRoot(std::shared_ptr<Node> const& rootNode);
 
-  // print method
-  std::string printGraph() const;
+    // print method
+    std::string printGraph() const;
 
-  // recursive print method for individual node
-  std::string printNode(std::shared_ptr<Node> const& node) const;
+    // recursive print method for individual node
+    std::string printNode(std::shared_ptr<Node> const& node) const;
 
-  // add planet
-  //void createPlanet(std::shared_ptr<GeometryNode> planet);
-
-  /*void traverse(node_traverse_func);
-  ~SceneGraph();
-  static SceneGraph& getInstance();
-  static std::shared_ptr<CameraNode> getActiveCamera();*/
- 
 };
 
 #endif

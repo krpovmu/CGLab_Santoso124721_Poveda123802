@@ -333,18 +333,10 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
 //handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
   // mouse handling
-  //auto cam = SceneGraph::getActiveCamera();
-  // mouse handling, x position movement
-  //cam->rotate(
-  //    glm::radians(float(pos_x / 50)), // angle
-  //    glm::vec3{0.0f, -1.0f, 0.0f}    // axis
-  //);
-  //// mouse handling, y position movement
-  //cam->rotate(
-  //    glm::radians(float(pos_y / 50)), // angle
-  //    glm::vec3{-1.0f, 0.0f, 0.0f}    // axis
-  //);
+  m_view_transform = glm::translate(m_view_transform, glm::fvec3{-(pos_x/100), pos_y/100, 0.0f});
+  uploadView();
 }
+
 
 //handle resizing
 void ApplicationSolar::resizeCallback(unsigned width, unsigned height) {
