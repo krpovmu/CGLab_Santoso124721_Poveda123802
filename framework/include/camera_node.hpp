@@ -1,39 +1,30 @@
-#pragma once
 #ifndef CAMERA_NODE_HPP
 #define CAMERA_NODE_HPP
 
-#include<glm/glm.hpp>
+#include <string>
+#include <memory>
+#include "node.hpp"
 
-class CameraNode : Public Node{
+class CameraNode : public Node {
+public:
+    // constructors
+    CameraNode();
+    CameraNode(bool isPerspective, bool isEnabled, glm::fmat4 const& projectionMatrix);
+    CameraNode(std::string const& name, std::shared_ptr<Node> const& parent, glm::fmat4 const& localTansform);
+    
+    // get attribute methods
+    bool getPerspective() const;
+    bool getEnabled() const;
+    glm::fmat4 getProjectionMatrix() const;
+
+    // set attribute methods
+    void setEnabled(bool isEnabled);
+    void setProjectionMatrix(glm::fmat4 const& projectionMatrix);
 
 private:
-    bool isPerspective;//bool isPerspective
-    bool isEnabled;//boll isEnabled
-    glm::fmat4 projectionMatrix;//mat4 projectionMatrix
-
-public:
-    CameraNode();
-
-    CameraNode(
-            bool isPerspective, 
-            bool isEnabled, 
-            glm::fmat4 projectionMatrix
-            );
-
-    CameraNode(
-            std::shared_ptr<Node> parent, 
-            std::string name
-            );
-
-    bool getPerspective();
-    bool getEnabled();
-    glm::fmat4 getProjectionMatrix();
-
-    void setEnabled(bool isEnabled);
-    void setProjectionMatrix(glm::fmat4 projectionMatrix);
-
-
+    bool isPerspective_;
+    bool isEnabled_;
+    glm::fmat4 projectionMatrix_;
 };
 
-#endif // !CAMERA_NODE_HPP
-
+#endif

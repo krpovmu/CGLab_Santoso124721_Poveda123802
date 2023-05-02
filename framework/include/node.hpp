@@ -1,54 +1,70 @@
-#pragma once
 #ifndef NODE_HPP
 #define NODE_HPP
 
-#include <list>
-#include <glm/glm.hpp>
+#include <iostream>
 #include <memory>
-#include <string>
+#include <list>
+#include <../../external/glm-0.9.6.3/glm/glm.hpp>
+#include <../../external/glm-0.9.6.3/glm/ext.hpp>
+#include <model.hpp>
+#include "node.hpp"
+
+class Node;
+typedef std::function<void(std::shared_ptr<Node>)> node_traverse_func;
 
 class Node {
-	private:
-		std::shared_ptr<Node> parent_;//node parent
-		std::list<std::shared_ptr<Node>> children_;//list node children
-		std::string name_;//string name
-		std::string path_;//string path
-		int depth_;//int depth
-		glm::fmat4 localTransform_;//mat4 localtransform
-		glm::fmat4 worldTransform_;//mat4 worldtransform
+ public:
+  // constructors
+  Node();
+  Node(
+      std::string const& name,
+      std::shared_ptr<Node> const& parent,
+      glm::fmat4 const& localTansform
+  );
+  Node(
+      std::string const& name,
+      std::shared_ptr<Node> const& parent,
+      std::list<std::shared_ptr<Node>> const& children,
+      std::string const& path,
+      glm::fmat4 const& localTansform
+  );
 
-	public:
-		Node();
-		
-		Node(
-			std::shared_ptr<Node> parent,
-			std::string name
-		);
-		
-		Node(
-			std::shared_ptr<Node> parent,
-			std::list<std::shared_ptr<Node>> children,
-			std::string name,
-			std::string path,
-			glm::fmat4 localTansform,
-			glm::fmat4 worldTransform
-		);
+  // get attribute methods
+  std::string getName();
+  std::shared_ptr<Node> getParent();
+  std::list<std::shared_ptr<Node>> getChildren();
+  std::string getPath();
+  int getDepth();
+  glm::fmat4 getWorldTransform();
+  glm::fmat4 getLocalTransform();
 
-		std::shared_ptr<Node> getParent();
-		std::shared_ptr<Node> getChild(std::string childName);
-		std::list<std::shared_ptr<Node>> getChildren();
-		std::string getName();
-		std::string getPath();
-		int getDepth();
-		glm::fmat4 getLocalTransform();
-		glm::fmat4 getWorldTransform();
+  // get methods of derived class
+  virtual float getSize() const;
+  virtual float getSpeed() const;
+  virtual float getDistance() const;
 
-		void setParent(std::shared_ptr<Node> parent);
-		void setLocalTransform(glm::fmat4 localTransform);
-		void setWorldTransform(glm::fmat4 worldTransform);
-		void addChild(std::shared_ptr<Node> childNode);
-		void removeChild(std::string childName);
+  // set attribute methods
+  void setParent(std::shared_ptr<Node> const& parent);
+  void setWorldTransform(glm::fmat4 const& worldTransform);
+  void setLocalTransform(glm::fmat4 const& localTransform);
 
+  // child specific methods
+  std::shared_ptr<Node> getChild(std::string const& childName);
+  void addChild(std::shared_ptr<Node> const&);
+  void removeChild(std::string const& childName);
+
+  //
+  void rotate(float angle, glm::vec3 const& axis);
+ 
+ private:
+  // attributes
+  std::string name_;
+  std::shared_ptr<Node> parent_;
+  std::list<std::shared_ptr<Node>> children_;
+  std::string path_;
+  int depth_;
+  glm::fmat4 worldTransform_;
+  glm::fmat4 localTransform_;
 };
 
-#endif // !NODE_HPP
+#endif

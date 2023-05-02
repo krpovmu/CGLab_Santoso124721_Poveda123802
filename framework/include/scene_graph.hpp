@@ -5,6 +5,7 @@
 #include <memory>
 #include "node.hpp"
 #include "geometry_node.hpp"
+#include "camera_node.hpp"
 
 class SceneGraph {
  public:
@@ -19,10 +20,15 @@ class SceneGraph {
   std::list<std::shared_ptr<GeometryNode>> getPlanets()const;
 
   // add planet
-  void addPlanet(std::shared_ptr<GeometryNode> planet);
+  void createPlanet(std::shared_ptr<GeometryNode> planet);
 
   // print method
   std::string printGraph()const;
+
+  void traverse(node_traverse_func);
+  ~SceneGraph();
+  static SceneGraph& getInstance();
+  static std::shared_ptr<CameraNode> getActiveCamera();
  
  private:
   // set attribute methods
