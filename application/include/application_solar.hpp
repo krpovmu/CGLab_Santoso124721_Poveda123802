@@ -7,6 +7,7 @@
 #include "scene_graph.hpp"
 #include "geometry_node.hpp"
 #include "camera_node.hpp"
+#include <glm/ext.hpp>
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -37,7 +38,7 @@ class ApplicationSolar : public Application {
   void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent);
   // render the planet
   //void renderPlanet(std::shared_ptr<Node> const& node) const;
-  void renderPlanet() const;
+  void renderPlanet(std::string name, glm::fvec3 scale, glm::vec3 translate) const;
 
  protected:
   void initializeShaderPrograms();

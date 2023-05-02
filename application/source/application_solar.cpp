@@ -36,8 +36,7 @@ ApplicationSolar::~ApplicationSolar() {
   glDeleteVertexArrays(1, &planet_object.vertex_AO);
 }
 
-// function to initialize a solarsystem 
-// this can be moved to the render so we don't need to add the initializeSolarSystem here *maybe*
+// function to create the scenegraph for the solarsystem 
 void ApplicationSolar::createSolarSystem(){
     // root
     //setting up a root node
@@ -58,39 +57,30 @@ void ApplicationSolar::createSolarSystem(){
     std::list<std::string> listPlanetNames = {"mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"};
 
     for (std::string name : listPlanetNames) {
+        //create the planet_holder
         Node planet_holder = Node(root_node, name + " holder");
-
         std::shared_ptr<Node> planet_holder_pointer = std::make_shared<Node>(planet_holder);
-
         root_node->addChild(planet_holder_pointer);
 
-        GeometryNode planet = GeometryNode(planet_holder_pointer, name);
-
-        std::shared_ptr<GeometryNode> planet_pointer = std::make_shared<GeometryNode>(planet);
-
-        planet_holder_pointer->addChild(planet_pointer);
+        //create the planet geomerty
+        GeometryNode planet_geometry = GeometryNode(planet_holder_pointer, name);
+        std::shared_ptr<GeometryNode> planet__geomerty_pointer = std::make_shared<GeometryNode>(planet_geometry);
+        planet_holder_pointer->addChild(planet__geomerty_pointer);
     }
-
-    /*makePlanet("mercury", root_node);
-    makePlanet("venus", root_node);
-    makePlanet("earth", root_node);
-    makePlanet("mars", root_node);
-    makePlanet("jupiter", root_node);
-    makePlanet("saturn", root_node);
-    makePlanet("uranus", root_node);
-    makePlanet("neptune", root_node);*/
 
     //special case for moon
     std::shared_ptr<Node> earth_holder = root_node->getChild("earth holder");
-    //makePlanet("moon", earth_holder);
+    //create the moon holder
     Node moon_holder = Node(earth_holder, "moon holder");
     std::shared_ptr<Node> moon_holder_pointer = std::make_shared<Node>(moon_holder);
     earth_holder->addChild(moon_holder_pointer);
-    GeometryNode moon = GeometryNode(moon_holder_pointer, "moon holder");
-    std::shared_ptr<GeometryNode> moon_pointer = std::make_shared<GeometryNode>(moon);
-    moon_holder_pointer->addChild(moon_pointer);
 
-    // camera node
+    //create the moon geomerty
+    GeometryNode moon_geomerty = GeometryNode(moon_holder_pointer, "moon holder");
+    std::shared_ptr<GeometryNode> moon_geomerty_pointer = std::make_shared<GeometryNode>(moon_geomerty);
+    moon_holder_pointer->addChild(moon_geomerty_pointer);
+
+    // special for camera node
     std::shared_ptr<CameraNode> camera = std::make_shared<CameraNode>(CameraNode(root_node, "camera"));
     root_node->addChild(camera);
 
@@ -114,11 +104,14 @@ void ApplicationSolar::makePlanet(std::string const& planetName, std::shared_ptr
 }
 
 // this is used to draw all object
+// change this usage to draw sun specifically
 void ApplicationSolar::render() const {
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at("planet").handle);
 
-    glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{ 0.0f, 1.0f, 0.0f });
+    //glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{ 0.0f, 1.0f, 0.0f });
+    glm::fmat4 model_matrix = glm::scale(glm::fmat4{}, glm::fvec3{ 0.7f, 0.7f, 0.7f });
+
     model_matrix = glm::translate(model_matrix, glm::fvec3{ 0.0f, 0.0f, -1.0f });
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
         1, GL_FALSE, glm::value_ptr(model_matrix));
@@ -134,35 +127,42 @@ void ApplicationSolar::render() const {
     // draw bound vertex array using bound shader
     glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 
-    // use this as a recursion function
-    // to check every node that has the root within root_node and planet_name_holder or earth_holder (this one for moon)
-    // need to set the size and stuff there make it as a properties to be inserted using 'auto' in for
-    // to be created in the scene
-    renderPlanet();
+    // this could be switch using reading the Scenegraph and then take the node's name for the "planet_holder"s 
+    std::list<std::string> listPlanetNames = { "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune" };
+    float intitialScale = 0.2f;
+    float initialTranslate = 0.7f;
+    for (std::string name : listPlanetNames) {
+        renderPlanet(name, glm::fvec3{ intitialScale, intitialScale, intitialScale }, glm::fvec3{ initialTranslate, 0.0f, initialTranslate });
+        intitialScale += 1.0f;
+        initialTranslate += 1.0f;
+    }
+    
 }
 
 // this function is for rendering the created planets
-void ApplicationSolar::renderPlanet()const {
+void ApplicationSolar::renderPlanet(std::string name, glm::fvec3 scale, glm::fvec3 translate)const {
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at("planet").handle);
 
-    glm::fmat4 model_matrix = glm::scale(glm::fmat4{}, glm::fvec3{ 0.5f, 0.5f, 0.5f });
+    std::cout << "==================================" << std::endl;
+    std::cout << glm::to_string(scale) << std::endl;
+    std::cout << "==================================" << std::endl;
+    std::cout << glm::to_string(translate) << std::endl;
+    std::cout << "==================================" << std::endl;
 
-    model_matrix = glm::rotate(model_matrix, float(glfwGetTime()), glm::fvec3{ 0.0f, 1.0f, 0.0f });
-    model_matrix = glm::translate(model_matrix, glm::fvec3{ 0.0f, 0.0f, -3.0f });
-
+    glm::fmat4 matrix_model = glm::scale(glm::fmat4{}, scale);
+    matrix_model = glm::rotate(matrix_model, float(glfwGetTime()), glm::fvec3{ 0.0f, 1.0f, 0.0f });
+    matrix_model = glm::translate(matrix_model, translate);
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-        1, GL_FALSE, glm::value_ptr(model_matrix));
-
+        1, GL_FALSE, glm::value_ptr(matrix_model));
     // extra matrix for normal transformation to keep them orthogonal to surface
-    glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
+    glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * matrix_model);
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
         1, GL_FALSE, glm::value_ptr(normal_matrix));
-
     // bind the VAO to draw
     glBindVertexArray(planet_object.vertex_AO);
-
     glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
+    
 }
 
 
