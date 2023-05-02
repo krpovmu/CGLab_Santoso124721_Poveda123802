@@ -25,8 +25,19 @@ class ApplicationSolar : public Application {
 
   // draw all objects
   void render() const;
+  
+  //NEW
   // draw single planet
-  void renderPlanet(std::shared_ptr<GeometryNode> planet)const;
+  //void renderPlanet(std::shared_ptr<GeometryNode> planet)const;
+  
+  //NEW
+  // create Scene Graph
+  void createSolarSystem();
+  // create/add planet
+  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent);
+  // render the planet
+  //void renderPlanet(std::shared_ptr<Node> const& node) const;
+  void renderPlanet() const;
 
  protected:
   void initializeShaderPrograms();
@@ -38,11 +49,6 @@ class ApplicationSolar : public Application {
   // upload view matrix
   void uploadView();
 
-  // create Scene Graph
-  void initializeSolarSystem();
-  // create single planet
-  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed);
-
   // cpu representation of model
   model_object planet_object;
   
@@ -51,7 +57,7 @@ class ApplicationSolar : public Application {
   // camera projection matrix
   glm::fmat4 m_view_projection;
 
-  //private:
+  //NEW
   SceneGraph solarSystem_;
 };
 

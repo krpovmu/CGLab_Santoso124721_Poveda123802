@@ -2,12 +2,23 @@
 
 // constructors
 CameraNode::CameraNode(){}
+
 CameraNode::CameraNode(
-  bool isPerspective, bool isEnabled, glm::mat4 const& projectionMatrix
+    bool isPerspective, 
+    bool isEnabled, 
+    glm::mat4 const& projectionMatrix
 ) :
-  isPerspective_(isPerspective), isEnabled_(isEnabled), projectionMatrix_(projectionMatrix)
+    isPerspective_(isPerspective), 
+    isEnabled_(isEnabled), 
+    projectionMatrix_(projectionMatrix)
 {}
-CameraNode::CameraNode(std::string const& name, std::shared_ptr<Node> const& parent, glm::fmat4 const& localTansform) : Node(name, parent, localTansform){}
+CameraNode::CameraNode(
+    std::shared_ptr<Node> const& parent,
+    std::string const& name
+    //, glm::fmat4 const& localTansform
+) : 
+    Node(parent, name /*, localTansform*/)
+{}
 
 // get attribute methods
 bool CameraNode::getPerspective() const { 

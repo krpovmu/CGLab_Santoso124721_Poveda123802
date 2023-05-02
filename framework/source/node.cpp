@@ -6,31 +6,37 @@ Node::Node() : name_("root"),
     children_(),
     path_(""),
     depth_(0),
-    worldTransform_(glm::fmat4(1)),
-    localTransform_(glm::fmat4(1)){}
+    localTransform_(glm::fmat4(1)),
+    worldTransform_(glm::fmat4(1))
+{}
+
 Node::Node(
-    std::string const& name,
     std::shared_ptr<Node> const& parent,
-    glm::fmat4 const& localTansform
-) : name_(name),
+    std::string const& name
+    //, glm::fmat4 const& localTransform
+) : 
     parent_(parent),
+    name_(name),
     path_(""),
     depth_(parent->getDepth()+1),
-    localTransform_(localTansform)
-    {setLocalTransform(localTansform);}
+    localTransform_(glm::fmat4(1))
+    {}
+
 Node::Node(
-    std::string const& name,
     std::shared_ptr<Node> const& parent,
     std::list<std::shared_ptr<Node>> const& children,
+    std::string const& name,
     std::string const& path,
-    glm::fmat4 const& localTansform
+    glm::fmat4 const& localTransform,
+    glm::fmat4 const& worldTransform
 ) : name_(name),
     parent_(parent),
     children_(children),
     path_(path),
     depth_(parent->getDepth()+1),
-    localTransform_(localTansform)
-    {setLocalTransform(localTansform);}
+    localTransform_(localTransform),
+    worldTransform_(worldTransform)
+    {}
 
 // get attribute methods
 std::string Node::getName(){
@@ -56,31 +62,24 @@ glm::fmat4 Node::getLocalTransform(){
 }
 
 // get methods of derived class
-float Node::getSize() const{
-    return 1.0f;
-}
-float Node::getSpeed() const{
-    return 1.0f;
-}
-float Node::getDistance() const{
-    return 1.0f;
-}
+//float Node::getSize() const{
+//    return 1.0f;
+//}
+//float Node::getSpeed() const{
+//    return 1.0f;
+//}
+//float Node::getDistance() const{
+//    return 1.0f;
+//}
 
 // set methods
 void Node::setParent(std::shared_ptr<Node> const& parent){
     parent_ = parent;
 }
-void Node::setWorldTransform(glm::fmat4 const& worldTransform){
-    for(auto child : children_){
-        //child->setWorldTransform(worldTransform);
-    }
-
-    worldTransform_ = worldTransform * localTransform_;
-}
 void Node::setLocalTransform(glm::fmat4 const& localTransform){
     localTransform_ = localTransform;
 
-    if (depth_ != 0){
+    /*if (depth_ != 0){
         worldTransform_ = parent_->getWorldTransform() * localTransform_;
     }else{
         worldTransform_ = localTransform_;
@@ -88,11 +87,14 @@ void Node::setLocalTransform(glm::fmat4 const& localTransform){
 
     for(auto child : children_){
         child->setWorldTransform(worldTransform_);
-    }
+    }*/
 }
-
-void Node::rotate(float angle, glm::vec3 const& axis){
-    localTransform_ = glm::rotate(localTransform_, angle, axis);
+void Node::setWorldTransform(glm::fmat4 const& worldTransform) {
+    //for(auto child : children_){
+        //child->setWorldTransform(worldTransform);
+    //}
+    //worldTransform_ = worldTransform * localTransform_;
+    worldTransform_ = worldTransform;
 }
 
 // get one specific child
@@ -113,8 +115,14 @@ void Node::addChild(std::shared_ptr<Node> const& node){
 // remove one child
 void Node::removeChild(std::string const& childName){
     for(std::shared_ptr<Node> child : children_){
-        if(child->getName().compare(childName) == 0){
+        if(child->getName()._Equal(childName)){
             children_.remove(child);
         }
     }
 }
+
+//rotate
+//void Node::rotate(float angle, glm::vec3 const& axis){
+//    localTransform_ = glm::rotate(localTransform_, angle, axis);
+//}
+
