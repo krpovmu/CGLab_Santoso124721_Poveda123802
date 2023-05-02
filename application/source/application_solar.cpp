@@ -109,8 +109,8 @@ void ApplicationSolar::render() const {
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at("planet").handle);
 
-    //glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{ 0.0f, 1.0f, 0.0f });
-    glm::fmat4 model_matrix = glm::scale(glm::fmat4{}, glm::fvec3{ 0.7f, 0.7f, 0.7f });
+    glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{ 0.0f, 0.0f, 0.0f });
+    model_matrix = glm::scale(glm::fmat4{}, glm::fvec3{ 0.7f, 0.7f, 0.7f });
 
     model_matrix = glm::translate(model_matrix, glm::fvec3{ 0.0f, 0.0f, -1.0f });
     glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
@@ -130,11 +130,15 @@ void ApplicationSolar::render() const {
     // this could be switch using reading the Scenegraph and then take the node's name for the "planet_holder"s 
     std::list<std::string> listPlanetNames = { "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune" };
     float intitialScale = 0.2f;
-    float initialTranslate = 0.7f;
+    float initialTranslateZ = 3.0f;
+    float initialTranslateX = 5.0f;
     for (std::string name : listPlanetNames) {
-        renderPlanet(name, glm::fvec3{ intitialScale, intitialScale, intitialScale }, glm::fvec3{ initialTranslate, 0.0f, initialTranslate });
-        intitialScale += 1.0f;
-        initialTranslate += 1.0f;
+        // NEED CHANGES HERE
+        // THE DISTANCE IS ABSURD
+        renderPlanet(name, glm::fvec3{ intitialScale, intitialScale, intitialScale }, glm::fvec3{ initialTranslateX, 0.0f, initialTranslateZ });
+        intitialScale += 0.5f;
+        initialTranslateZ += 1.0f;
+        initialTranslateX += 2.0f;
     }
     
 }
@@ -143,12 +147,14 @@ void ApplicationSolar::render() const {
 void ApplicationSolar::renderPlanet(std::string name, glm::fvec3 scale, glm::fvec3 translate)const {
     // bind shader to upload uniforms
     glUseProgram(m_shaders.at("planet").handle);
-
+    
+    /*std::cout << "==================================" << std::endl;
+    std::cout << name << std::endl;
     std::cout << "==================================" << std::endl;
     std::cout << glm::to_string(scale) << std::endl;
     std::cout << "==================================" << std::endl;
     std::cout << glm::to_string(translate) << std::endl;
-    std::cout << "==================================" << std::endl;
+    std::cout << "==================================" << std::endl;*/
 
     glm::fmat4 matrix_model = glm::scale(glm::fmat4{}, scale);
     matrix_model = glm::rotate(matrix_model, float(glfwGetTime()), glm::fvec3{ 0.0f, 1.0f, 0.0f });
