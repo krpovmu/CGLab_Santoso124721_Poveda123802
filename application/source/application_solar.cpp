@@ -66,11 +66,10 @@ void ApplicationSolar::createSolarSystem(){
 
         //create the planet geomerty
         GeometryNode planet_geometry = GeometryNode(planet_holder_pointer, name + " geomerty");
-        std::shared_ptr<GeometryNode> planet__geomerty_pointer = std::make_shared<GeometryNode>(planet_geometry);
-        planet_holder_pointer->addChild(planet__geomerty_pointer);
+        std::shared_ptr<GeometryNode> planet_geometry_pointer = std::make_shared<GeometryNode>(planet_geometry);
+        planet_holder_pointer->addChild(planet_geometry_pointer);
     }
     //=======================================================================
-    
 
     //=======================================================================
     // Create the holder node and the geometry node for the planets -> special case for moon
@@ -79,12 +78,12 @@ void ApplicationSolar::createSolarSystem(){
     Node moon_holder = Node(earth_holder, "moon holder");
     std::shared_ptr<Node> moon_holder_pointer = std::make_shared<Node>(moon_holder);
     earth_holder->addChild(moon_holder_pointer);
+
     //create the moon geomerty
     GeometryNode moon_geomerty = GeometryNode(moon_holder_pointer, "moon holder");
     std::shared_ptr<GeometryNode> moon_geomerty_pointer = std::make_shared<GeometryNode>(moon_geomerty);
     moon_holder_pointer->addChild(moon_geomerty_pointer);
     //=======================================================================
-    
 
     //=======================================================================
     // special for camera node
@@ -92,12 +91,10 @@ void ApplicationSolar::createSolarSystem(){
     root_node->addChild(camera);
     //=======================================================================
 
-
     //=======================================================================
     // Printing the Scenegraph in the Console
     std::cout << sceneGraph_.printGraph() << std::endl;
     //=======================================================================
-    
 
     //=======================================================================
     // TESTING 3.0
@@ -138,7 +135,7 @@ void ApplicationSolar::render() const {
 
     // draw bound vertex array using bound shader
     glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
-    
+
     // . : : Adition : : .
     // TO DO
     // this should be switched by reading the Scenegraph and then take the node's name for the "planet_holder"
@@ -166,7 +163,6 @@ void ApplicationSolar::render() const {
 
         initialTranslateZ += 3.0f;
     }
-    
 }
 
 void ApplicationSolar::uploadView() {
