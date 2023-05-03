@@ -25,7 +25,6 @@ public:
     CameraNode(
         std::shared_ptr<Node> const& parent,
         std::string const& name
-        //, glm::fmat4 const& localTransform
     );
     
     // get attribute methods

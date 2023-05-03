@@ -36,7 +36,9 @@ public:
     // print method
     std::string printGraph() const;
 
-    // recursive print method for individual node
+    /* Since in UML we only set the output as string 
+     we need to make a function that recursively print every nodes in the graph 
+     based on the nodes that is given on the properties*/
     std::string printNode(std::shared_ptr<Node> const& node) const;
 
 };

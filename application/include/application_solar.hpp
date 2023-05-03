@@ -34,11 +34,6 @@ class ApplicationSolar : public Application {
   //NEW
   // create Scene Graph
   void createSolarSystem();
-  // create/add planet
-  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent);
-  // render the planet
-  //void renderPlanet(std::shared_ptr<Node> const& node) const;
-  void renderPlanet(std::string name, glm::fvec3 scale, glm::vec3 translate) const;
 
  protected:
   void initializeShaderPrograms();
@@ -59,7 +54,7 @@ class ApplicationSolar : public Application {
   glm::fmat4 m_view_projection;
 
   //NEW
-  SceneGraph solarSystem_;
+  SceneGraph sceneGraph_;
 };
 
 #endif

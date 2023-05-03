@@ -8,9 +8,6 @@
 #include "model.hpp"
 #include "node.hpp"
 
-//class Node;
-//typedef std::function<void(std::shared_ptr<Node>)> node_traverse_func;
-
 class Node {
 private:
     // attributes
@@ -29,7 +26,6 @@ private:
     Node(
         std::shared_ptr<Node> const& parent,
         std::string const& name
-        //, glm::fmat4 const& localTransform
     );
 
     Node(
@@ -59,14 +55,6 @@ private:
     // add + remove child
     void addChild(std::shared_ptr<Node> const&);
     void removeChild(std::string const& childName);
-
-    // get methods of derived class
-    /*virtual float getSize() const;
-    virtual float getSpeed() const;
-    virtual float getDistance() const;*/
-
-    //testing
-    //void rotate(float angle, glm::vec3 const& axis);
  
 };
 
