@@ -7,7 +7,6 @@
 #include "scene_graph.hpp"
 #include "geometry_node.hpp"
 #include "camera_node.hpp"
-#include <glm/ext.hpp>
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -26,14 +25,13 @@ class ApplicationSolar : public Application {
 
   // draw all objects
   void render() const;
-  
-  //NEW
   // draw single planet
-  //void renderPlanet(std::shared_ptr<GeometryNode> planet)const;
-  
-  //NEW
-  // create Scene Graph
-  void createSolarSystem();
+  void renderPlanet(std::shared_ptr<GeometryNode> planet)const;
+  void renderStars()const;
+
+  //
+  void calculateTrajectory();
+  void drawOrbits(SceneGraph const& scene)const;
 
  protected:
   void initializeShaderPrograms();
@@ -41,20 +39,31 @@ class ApplicationSolar : public Application {
   // update uniform values
   void uploadUniforms();
   // upload projection matrix
-  void uploadProjection();
+  void uploadProjection(std::string shader_name);
   // upload view matrix
-  void uploadView();
+  void uploadView(std::string shader_name);
+
+  // create Scene Graph
+  void initializeSolarSystem();
+  // create single planet
+  void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed);
+  // create stars
+  void initializeStars();
 
   // cpu representation of model
   model_object planet_object;
-  
+  model_object star_object;
+  model_object trajectory_object;
+
   // camera transform matrix
   glm::fmat4 m_view_transform;
   // camera projection matrix
   glm::fmat4 m_view_projection;
 
-  //NEW
-  SceneGraph sceneGraph_;
+private:
+  SceneGraph solarSystem_;
+  std::vector<float> stars_;
+
 };
 
 #endif

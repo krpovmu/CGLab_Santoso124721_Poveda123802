@@ -3,29 +3,14 @@
 
 #include <string>
 #include <memory>
-#include <glm/glm.hpp>
 #include "node.hpp"
 
 class CameraNode : public Node {
-private:
-    bool isPerspective_;
-    bool isEnabled_;
-    glm::fmat4 projectionMatrix_;
-
 public:
     // constructors
     CameraNode();
-
-    CameraNode(
-        bool isPerspective, 
-        bool isEnabled, 
-        glm::fmat4 const& projectionMatrix
-    );
-
-    CameraNode(
-        std::shared_ptr<Node> const& parent,
-        std::string const& name
-    );
+    CameraNode(bool isPerspective, bool isEnabled, glm::fmat4 const& projectionMatrix);
+    CameraNode(std::string const& name, std::shared_ptr<Node> const& parent, glm::fmat4 const& localTansform);
     
     // get attribute methods
     bool getPerspective() const;
@@ -36,6 +21,10 @@ public:
     void setEnabled(bool isEnabled);
     void setProjectionMatrix(glm::fmat4 const& projectionMatrix);
 
+private:
+    bool isPerspective_;
+    bool isEnabled_;
+    glm::fmat4 projectionMatrix_;
 };
 
 #endif
