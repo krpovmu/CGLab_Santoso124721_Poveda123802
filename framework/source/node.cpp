@@ -66,17 +66,6 @@ glm::fmat4 Node::getLocalTransform()
     return localTransform_;
 }
 
-// Distance to the center
-void Node::setDistanceToOrigin(glm::fvec3 const &distance_to_origin)
-{
-    distance_to_origin_ = distance_to_origin;
-}
-
-glm::fvec3 Node::getDistanceToOrigin() const
-{
-    return distance_to_origin_;
-}
-
 Node *Node::getOrigin() const
 {
     return origin_;
@@ -94,16 +83,6 @@ float Node::getSpeed() const
 float Node::getDistance() const
 {
     return 1.0f;
-}
-
-float Node::getRadius() const
-{
-    return radius_;
-}
-
-void Node::setRadius(float const &radius)
-{
-    radius_ = radius;
 }
 
 // set methods

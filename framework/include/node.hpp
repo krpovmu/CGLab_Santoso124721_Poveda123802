@@ -42,9 +42,6 @@ public:
     virtual float getSpeed() const;
     virtual float getDistance() const;
 
-    float getRadius() const;
-    void setRadius(float const& radius);
-
     // set attribute methods
     void setParent(std::shared_ptr<Node> const &parent);
     void setWorldTransform(glm::fmat4 const &worldTransform);
@@ -65,8 +62,6 @@ private:
     int depth_;
     glm::fmat4 worldTransform_;
     glm::fmat4 localTransform_;
-    glm::fvec3 distance_to_origin_;
-    float radius_;
 };
 
 #endif

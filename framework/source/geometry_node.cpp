@@ -14,7 +14,8 @@ GeometryNode::GeometryNode(std::string const &name,
     : Node(name, parent, localTansform)
     , size_(size)
     , speed_(speed)
-    , distance_(distance_)
+    , distance_(distance)
+    , distance_to_origin_(distance)
 {}
 
 // get attribute methods
@@ -33,6 +34,17 @@ float GeometryNode::getSpeed() const
 float GeometryNode::getDistance() const
 {
     return distance_;
+}
+
+// Distance to the center
+void GeometryNode::setDistanceToOrigin(float distance)
+{
+    distance_to_origin_ = glm::fvec3{distance, 0.0f, 0.0f};
+}
+
+glm::fvec3 GeometryNode::getDistanceToOrigin() const
+{
+    return distance_to_origin_;
 }
 
 // set attribute methods

@@ -53,8 +53,7 @@ protected:
     // init orbits
     void initializeOrbits();
     // render orbits
-    //void renderOrbits(Node *const &child_planet) const;
-    void drawOrbits(std::shared_ptr<GeometryNode> childPlanet) const;
+    void drawOrbits(std::shared_ptr<GeometryNode> planet) const;
 
     // cpu representation of model
     model_object planet_object;

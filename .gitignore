@@ -3,5 +3,6 @@ install
 *.o
 *.sublime-workspace
 *~
+*.txt.user
 .DS_Store 
 .vs
