@@ -137,9 +137,12 @@ void ApplicationSolar::initializeStars()
         stars_container.emplace_back(z);
 
         // random RGB-value for color of the star
-        GLfloat red = ((rand() % 51) + 153) / 255.0f;
+        GLfloat red = (float)rand() / RAND_MAX;
+        GLfloat green = (float)rand() / RAND_MAX;
+        GLfloat blue = (float)rand() / RAND_MAX; 
+        /*GLfloat red = ((rand() % 51) + 153) / 255.0f;
         GLfloat green = ((rand() % 80) + 110) / 255.0f;
-        GLfloat blue = ((rand() % 64) + 140) / 255.0f;
+        GLfloat blue = ((rand() % 64) + 140) / 255.0f;*/
         stars_container.emplace_back(red);
         stars_container.emplace_back(green);
         stars_container.emplace_back(blue);
