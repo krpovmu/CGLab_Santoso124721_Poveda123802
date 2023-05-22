@@ -140,9 +140,7 @@ void ApplicationSolar::initializeStars()
         GLfloat red = (float)rand() / RAND_MAX;
         GLfloat green = (float)rand() / RAND_MAX;
         GLfloat blue = (float)rand() / RAND_MAX; 
-        /*GLfloat red = ((rand() % 51) + 153) / 255.0f;
-        GLfloat green = ((rand() % 80) + 110) / 255.0f;
-        GLfloat blue = ((rand() % 64) + 140) / 255.0f;*/
+
         stars_container.emplace_back(red);
         stars_container.emplace_back(green);
         stars_container.emplace_back(blue);
@@ -268,7 +266,7 @@ void ApplicationSolar::drawOrbits(std::shared_ptr<GeometryNode> planet) const
     // bind VAO to draw
     glBindVertexArray(orbit_object.vertex_AO);
     // draw bound vertex array using bound shader
-    glDrawArrays(orbit_object.draw_mode, 0, planet_object.num_elements);
+    glDrawArrays(orbit_object.draw_mode, 0, orbit_object.num_elements);
 }
 
 void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet) const
