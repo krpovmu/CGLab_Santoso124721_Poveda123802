@@ -1,6 +1,5 @@
 #include "node.hpp"
 
-// constructors
 Node::Node()
     : name_("root")
     , parent_(nullptr)
@@ -84,6 +83,10 @@ float Node::getDistance() const
 {
     return 1.0f;
 }
+bool Node::getIsLight()
+{
+    return isLight_;
+}
 
 // set methods
 void Node::setParent(std::shared_ptr<Node> const &parent)
@@ -95,7 +98,6 @@ void Node::setWorldTransform(glm::fmat4 const &worldTransform)
     for (auto child : children_) {
         //child->setWorldTransform(worldTransform);
     }
-
     worldTransform_ = worldTransform * localTransform_;
 }
 void Node::setLocalTransform(glm::fmat4 const &localTransform)
@@ -111,6 +113,10 @@ void Node::setLocalTransform(glm::fmat4 const &localTransform)
     for (auto child : children_) {
         child->setWorldTransform(worldTransform_);
     }
+}
+void Node::setIsLight(bool isLight)
+{
+    isLight_ = isLight;
 }
 
 // get one specific child

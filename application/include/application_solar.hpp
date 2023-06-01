@@ -2,18 +2,18 @@
 #define APPLICATION_SOLAR_HPP
 
 #include "application.hpp"
-#include "camera_node.hpp"
-#include "geometry_node.hpp"
 #include "model.hpp"
-#include "scene_graph.hpp"
 #include "structs.hpp"
+#include "scene_graph.hpp"
+#include "geometry_node.hpp"
+#include "camera_node.hpp"
+#include "point_light_node.hpp"
 
 // gpu representation of model
-class ApplicationSolar : public Application
-{
+class ApplicationSolar : public Application {
 public:
     // allocate and initialize objects
-    ApplicationSolar(std::string const &resource_path);
+    ApplicationSolar(std::string const& resource_path);
     // free allocated objects
     ~ApplicationSolar();
 
@@ -27,8 +27,10 @@ public:
     // draw all objects
     void render() const;
     // draw single planet
-    void renderPlanet(std::shared_ptr<GeometryNode> planet) const;
-    void drawStarts() const;
+    void renderPlanet(std::shared_ptr<GeometryNode> planet)const;
+    void renderStars()const;
+    void renderLightNodes()const;
+    void renderOrbits() const;
 
 protected:
     void initializeShaderPrograms();
@@ -42,18 +44,23 @@ protected:
 
     // create Scene Graph
     void initializeSolarSystem();
+    // create single sun
+    void makeSun(
+        std::string const& name,
+        std::shared_ptr<Node> const& parent,
+        float distance,
+        float size,
+        float speed,
+        glm::fvec3 color,
+        float light_intensity,
+        glm::fvec3 light_color
+        );
     // create single planet
-    void createNewPlanet(std::string const &name,
-                         std::shared_ptr<Node> const &parent,
-                         float distance,
-                         float size,
-                         float speed);
+    void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color);
     // create stars
     void initializeStars();
     // init orbits
     void initializeOrbits();
-    // render orbits
-    void drawOrbits(std::shared_ptr<GeometryNode> planet) const;
 
     // cpu representation of model
     model_object planet_object;
@@ -64,11 +71,11 @@ protected:
     glm::fmat4 m_view_transform;
     // camera projection matrix
     glm::fmat4 m_view_projection;
+    bool cellShading_Mode;
 
 private:
-    SceneGraph planetarySystem_;
-    std::vector<float> stars_container;
-    std::vector<GLfloat> orbit_container;
+    SceneGraph solarSystem_;
+    std::vector<float> stars_;
 };
 
 #endif

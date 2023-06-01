@@ -1,6 +1,5 @@
 #include "geometry_node.hpp"
 
-// constructors
 GeometryNode::GeometryNode() {}
 GeometryNode::GeometryNode(model const &geometry)
     : geometry_(geometry)
@@ -10,12 +9,15 @@ GeometryNode::GeometryNode(std::string const &name,
                            glm::fmat4 const &localTansform,
                            float size,
                            float speed,
-                           float distance)
+                           float distance,
+                           glm::fvec3 color)
     : Node(name, parent, localTansform)
     , size_(size)
     , speed_(speed)
     , distance_(distance)
     , distance_to_origin_(distance)
+    //, color_(glm::normalize(color))
+    , color_(color)
 {}
 
 // get attribute methods
@@ -52,3 +54,14 @@ void GeometryNode::setGeometry(model const &geometry)
 {
     geometry_ = geometry;
 }
+
+// set color
+glm::fvec3 GeometryNode::getColor() const
+{
+    return color_;
+}
+void GeometryNode::setColor(glm::fvec3 const &color)
+{
+    color_ = color;
+}
+

@@ -9,35 +9,34 @@
 
 struct GLFWwindow;
 // gpu representation of model
-class Application
-{
+class Application {
 public:
     template<typename T>
-    static void run(int argc, char *argv[], unsigned ver_major, unsigned ver_minor);
+    static void run(int argc, char* argv[], unsigned ver_major, unsigned ver_minor);
 
     // allocate and initialize objects
-    Application(std::string const &resource_path);
+    Application(std::string const& resource_path);
     // free shader resources
     virtual ~Application();
 
     // update viewport and field of view
     void resize_callback(unsigned width, unsigned height);
     // handle key input
-    void key_callback(GLFWwindow *window, int key, int action, int mods);
+    void key_callback(GLFWwindow* window, int key, int action, int mods);
     //handle mouse movement input
-    void mouse_callback(GLFWwindow *window, double pos_x, double pos_y);
+    void mouse_callback(GLFWwindow* window, double pos_x, double pos_y);
     // recompile shaders form source files
     void reloadShaders(bool throwing);
 
-    // functiosn which are implemented in derived classes
+    // function which are implemented in derived classes
     // update uniform locations and values
-    inline virtual void uploadUniforms(){};
+    inline virtual void uploadUniforms() {};
     // react to key input
-    inline virtual void keyCallback(int key, int action, int mods){};
+    inline virtual void keyCallback(int key, int action, int mods) {};
     //handle delta mouse movement input
-    inline virtual void mouseCallback(double pos_x, double pos_y){};
+    inline virtual void mouseCallback(double pos_x, double pos_y) {};
     // update framebuffer textures
-    inline virtual void resizeCallback(unsigned width, unsigned height){};
+    inline virtual void resizeCallback(unsigned width, unsigned height) {};
     // draw all objects
     virtual void render() const = 0;
 
@@ -54,16 +53,17 @@ protected:
     static const float initial_aspect_ratio;
 };
 
+
 #include "utils.hpp"
 #include "window_handler.hpp"
 
 template<typename T>
-void Application::run(int argc, char *argv[], unsigned ver_major, unsigned ver_minor)
-{
-    GLFWwindow *window = window_handler::initialize(initial_resolution, ver_major, ver_minor);
+void Application::run(int argc, char* argv[], unsigned ver_major, unsigned ver_minor) {  
 
+    GLFWwindow* window = window_handler::initialize(initial_resolution, ver_major, ver_minor);
+    
     std::string resource_path = utils::read_resource_path(argc, argv);
-    T *application = new T{resource_path};
+    T* application = new T{resource_path};
 
     window_handler::set_callback_object(window, application);
 
@@ -73,7 +73,7 @@ void Application::run(int argc, char *argv[], unsigned ver_major, unsigned ver_m
     // enable depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
+    
     // rendering loop
     while (!glfwWindowShouldClose(window)) {
         // query input
@@ -91,5 +91,6 @@ void Application::run(int argc, char *argv[], unsigned ver_major, unsigned ver_m
     delete application;
     window_handler::close_and_quit(window, EXIT_SUCCESS);
 }
+
 
 #endif

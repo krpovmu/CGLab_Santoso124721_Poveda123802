@@ -11,15 +11,15 @@
 class Application;
 struct GLFWwindow;
 
-namespace window_handler { 
-  // create window and set callbacks
-  GLFWwindow* initialize(glm::uvec2 const& resolution, unsigned ver_major, unsigned ver_minor);
-  // load shader programs and update uniform locations
-  void set_callback_object(GLFWwindow* window, Application* app);
-  // free resources
-  void close_and_quit(GLFWwindow* window, int status);
+namespace window_handler {
+// create window and set callbacks
+GLFWwindow* initialize(glm::uvec2 const& resolution, unsigned ver_major, unsigned ver_minor);
+// load shader programs and update uniform locations
+void set_callback_object(GLFWwindow* window, Application* app);
+// free resources
+void close_and_quit(GLFWwindow* window, int status);
     // calculate fps and show in window title
-  void show_fps(GLFWwindow* window);
+void show_fps(GLFWwindow* window);
 }
 
 #endif

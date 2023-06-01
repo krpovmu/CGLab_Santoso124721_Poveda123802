@@ -1,7 +1,6 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-//#include "node.hpp"
 #include <../../external/glm-0.9.6.3/glm/ext.hpp>
 #include <../../external/glm-0.9.6.3/glm/glm.hpp>
 #include <iostream>
@@ -42,6 +41,10 @@ public:
     virtual float getSpeed() const;
     virtual float getDistance() const;
 
+    // light set and get
+    bool getIsLight();
+    void setIsLight(bool isLight);
+
     // set attribute methods
     void setParent(std::shared_ptr<Node> const &parent);
     void setWorldTransform(glm::fmat4 const &worldTransform);
@@ -62,6 +65,8 @@ private:
     int depth_;
     glm::fmat4 worldTransform_;
     glm::fmat4 localTransform_;
+    bool isLight_ = false;
 };
 
 #endif
+

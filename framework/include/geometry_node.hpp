@@ -16,7 +16,8 @@ public:
                  glm::fmat4 const &localTansform,
                  float size,
                  float speed,
-                 float distance);
+                 float distance,
+                 glm::fvec3 color);
 
     // get attribute methods
     model getGeometry() const;
@@ -34,6 +35,10 @@ public:
     float getRadius() const;
     void setRadius(float radius);
 
+    // set and get color
+    void setColor(glm::fvec3 const& color);
+    glm::fvec3 getColor() const;
+
 private:
     // attributes
     model geometry_;
@@ -41,6 +46,7 @@ private:
     float speed_;
     float distance_;
     glm::fvec3 distance_to_origin_;
+    glm::fvec3 color_;
 };
 
 #endif
