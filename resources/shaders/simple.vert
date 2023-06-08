@@ -11,7 +11,7 @@ uniform mat4 ProjectionMatrix;
 uniform mat4 NormalMatrix;
 
 out vec3 pass_Normal, pass_Position, pass_Camera_Position;
-out mat4 pass_ViewMatrix, pass_ModelMatrix, pass_NormalMatrix;
+out mat4 pass_ViewMatrix, pass_ModelMatrix; //pass_NormalMatrix;
 
 void main(void)
 {
@@ -21,5 +21,5 @@ void main(void)
     pass_ModelMatrix = ModelMatrix;
     pass_ViewMatrix = ViewMatrix;
     pass_Normal = mat3(NormalMatrix) * in_Normal;
-    pass_NormalMatrix = NormalMatrix;
+    //pass_NormalMatrix = NormalMatrix;
 }

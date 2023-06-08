@@ -1,7 +1,7 @@
 #version 150
 
 in vec3 pass_Normal, pass_Position, pass_Camera_Position;
-in mat4 pass_ViewMatrix, pass_ModelMatrix, pass_NormalMatrix;
+in mat4 pass_ViewMatrix, pass_ModelMatrix; //pass_NormalMatrix;
 
 out vec4 out_Color;
 
@@ -10,6 +10,7 @@ uniform vec3 light_color;
 uniform vec3 light_position;
 uniform float light_intensity;
 uniform bool CellShadingMode;
+uniform bool blinn;
 uniform vec3 ambient_intensity;
 
 float shine = 15.0f;
@@ -21,28 +22,41 @@ void main() {
     vec3 normal = normalize(pass_Normal);
     vec3 vertex_pos = pass_Position;
 
+    // ambient lighting
     vec3 specular_color = vec3(1.0,1.0,1.0);
-
+    // diffuse lighting
     float diffuse_reflection_factor = 0.9;
+    // specular lighting
     float specular_reflection_factor = 0.9;
+    // the shininess value of the highlight
     int n = 32;
 
     vec3 camera_Position = pass_Camera_Position;
 
     vec3 transformed_light_position = (pass_ViewMatrix * vec4(light_position,1.0)).xyz;
 
+    // Blinn-Phong Ilumination calculation of the halfway vector
     vec3 light_Direction = normalize(transformed_light_position - pass_Position);
     vec3 view_Direction = normalize(camera_Position - pass_Position);
+    // halfway vector
     vec3 h = normalize(view_Direction + light_Direction);
 
+    // ========= //
+    // Phong
+    vec3 reflect_Direction = reflect(-light_Direction, normal);
+
     float diffuse_light_intensity = light_intensity * diffuse_reflection_factor * max(dot(normal,light_Direction),0);
+
+    // Blinn-Phong Ilumination
     float specular_light_intensity = light_intensity * specular_reflection_factor * pow(max(dot(h,normal),0),n);
+
+    // Phong
+    //float specular_light_intensity = light_intensity * specular_reflection_factor * pow(max(dot(view_Direction,reflect_Direction),0),8.0);
 
     //vec3 ambient = ambient_intensity * light_color;
     vec3 ambient = ambient_intensity;
     vec3 diffuse = diffuse_light_intensity * light_color;
     vec3 specular =  specular_light_intensity * specular_color;
-
 
     // Cellshading or Toon Shading
     if(!CellShadingMode) {
