@@ -7,6 +7,7 @@
 #include <list>
 #include <memory>
 #include <model.hpp>
+#include <structs.hpp>
 
 class Node
 {

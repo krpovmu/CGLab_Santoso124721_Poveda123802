@@ -1,77 +1,50 @@
 #version 150
 
-in vec3 pass_Normal, pass_Position, pass_Camera_Position;
-in mat4 pass_ViewMatrix, pass_ModelMatrix; //pass_NormalMatrix;
+// inputs
+in vec3 pass_Normal;
+in vec3 pass_Vertex_Position;
+in vec3 pass_Camera_Position;
+in vec2 pass_TexCoord;
+in mat4 pass_ViewMatrix;
 
-out vec4 out_Color;
+// outout: color of position
+out vec4 out_color;
 
+// uploaded uniforms
 uniform vec3 planet_color;
-uniform vec3 light_color;
 uniform vec3 light_position;
+uniform vec3 light_color;
 uniform float light_intensity;
-uniform bool CellShadingMode;
-uniform bool blinn;
 uniform vec3 ambient_intensity;
-
-float shine = 15.0f;
-float specular_intensity = 0.5f;
-float diffuse_intensity = 0.6f;
-float outline = 1.0f;
+uniform sampler2D planet_texture;
 
 void main() {
-    vec3 normal = normalize(pass_Normal);
-    vec3 vertex_pos = pass_Position;
+  vec3 normal_vector = normalize(pass_Normal);
 
-    // ambient lighting
-    vec3 specular_color = vec3(1.0,1.0,1.0);
-    // diffuse lighting
-    float diffuse_reflection_factor = 0.9;
-    // specular lighting
-    float specular_reflection_factor = 0.9;
-    // the shininess value of the highlight
-    int n = 32;
+  // create direction vectors (pointing form the vertex to the light / camera)
+  vec3 light_direction_vector = normalize((pass_ViewMatrix * vec4(light_position, 1.0) - vec4(pass_Vertex_Position, 1.0)).xyz);
+  vec3 camera_direction_vector = normalize((pass_ViewMatrix * vec4(pass_Camera_Position, 1.0) - vec4(pass_Vertex_Position, 1.0)).xyz);
 
-    vec3 camera_Position = pass_Camera_Position;
+  // light - camera vector
+  vec3 h = normalize(light_direction_vector + camera_direction_vector);
 
-    vec3 transformed_light_position = (pass_ViewMatrix * vec4(light_position,1.0)).xyz;
+  // calculate color rainbow
+  //out_color = vec4(abs(normalize(pass_Normal)), 1.0);
 
-    // Blinn-Phong Ilumination calculation of the halfway vector
-    vec3 light_Direction = normalize(transformed_light_position - pass_Position);
-    vec3 view_Direction = normalize(camera_Position - pass_Position);
-    // halfway vector
-    vec3 h = normalize(view_Direction + light_Direction);
+  // calculate color simple
+  //out_color = vec4(planet_color, 1.0);
 
-    // ========= //
-    // Phong
-    vec3 reflect_Direction = reflect(-light_Direction, normal);
+  // calculate color diffuse & specular
+  //vec3 ambient_color = ambient_intensity * planet_color * light_color;
+  //vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * planet_color * light_intensity * light_color;
+  //vec3 specular_color = pow(max(dot(h, normal_vector), 0), 16.0) * light_color;
+  //out_color = vec4(ambient_color + diffuse_color + specular_color, 1.0);
 
-    float diffuse_light_intensity = light_intensity * diffuse_reflection_factor * max(dot(normal,light_Direction),0);
-
-    // Blinn-Phong Ilumination
-    float specular_light_intensity = light_intensity * specular_reflection_factor * pow(max(dot(h,normal),0),n);
-
-    // Phong
-    //float specular_light_intensity = light_intensity * specular_reflection_factor * pow(max(dot(view_Direction,reflect_Direction),0),8.0);
-
-    //vec3 ambient = ambient_intensity * light_color;
-    vec3 ambient = ambient_intensity;
-    vec3 diffuse = diffuse_light_intensity * light_color;
-    vec3 specular =  specular_light_intensity * specular_color;
-
-    // Cellshading or Toon Shading
-    if(!CellShadingMode) {
-        out_Color = vec4((ambient + diffuse) * planet_color + specular, 1.0f);
-    }
-    else {
-        if (diffuse_light_intensity > 0.95)
-            diffuse = 1.0 * light_color;
-        else if (diffuse_light_intensity > 0.6)
-            diffuse = 0.7 * light_color;
-        else if (diffuse_light_intensity > 0.2)
-            diffuse = 0.35 * light_color;
-        else
-            diffuse = 0.1 * light_color;
-
-        out_Color = vec4((ambient + diffuse) * planet_color, 1.0);
-    }
+  // calculate color current
+  vec4 texture_color = texture(planet_texture, pass_TexCoord);
+  vec3 ambient_color = ambient_intensity * texture_color.rgb * light_color;
+  vec3 diffuse_color = max(dot(normal_vector, light_direction_vector), 0) * texture_color.rgb * light_intensity * light_color;
+  vec3 specular_color = pow(max(dot(h, normal_vector), 0), 16.0) * light_color;
+  out_color = vec4(ambient_color + diffuse_color + specular_color, 1.0);
+  //out_color = vec4(pass_TexCoord, 1, 1);
 }

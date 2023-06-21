@@ -8,6 +8,7 @@
 #include "geometry_node.hpp"
 #include "camera_node.hpp"
 #include "point_light_node.hpp"
+#include "texture_loader.hpp"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -31,6 +32,7 @@ public:
     void renderStars()const;
     void renderLightNodes()const;
     void renderOrbits() const;
+    void renderSkybox() const;
 
 protected:
     void initializeShaderPrograms();
@@ -53,25 +55,35 @@ protected:
         float speed,
         glm::fvec3 color,
         float light_intensity,
-        glm::fvec3 light_color
+        glm::fvec3 light_color, std::string texture,
+        int index
         );
     // create single planet
-    void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color);
+    void makePlanet(std::string const& name, std::shared_ptr<Node> const& parent, float distance, float size, float speed, glm::fvec3 color, std::string texture, int index);
+    // initialize texture of single planet / sun
+    void makeTexture(std::shared_ptr<GeometryNode> const& object);
     // create stars
     void initializeStars();
     // init orbits
     void initializeOrbits();
+    // init Skybox
+    void initializeSkyBox();
 
     // cpu representation of model
     model_object planet_object;
     model_object star_object;
     model_object orbit_object;
+    model_object skybox_object;
 
     // camera transform matrix
     glm::fmat4 m_view_transform;
     // camera projection matrix
     glm::fmat4 m_view_projection;
     bool cellShading_Mode;
+    // need vector to hold pixel-data of skybox-tex
+    std::vector<pixel_data> skybox_contain_pixdata_;
+    // add skybox texture_object
+    texture_object skybox_texture_obj_;
 
 private:
     SceneGraph solarSystem_;
