@@ -252,12 +252,12 @@ void ApplicationSolar::initializeStars(){
 }
 
 void ApplicationSolar::render() const {
+    // render Skybox
+    renderSkybox();
     // render stars
     renderStars();
     // render lightnodes
     renderLightNodes();
-    // render Skybox
-    renderSkybox();
     // render planets
     auto planets = solarSystem_.getPlanets();
     for (auto planet : planets){
