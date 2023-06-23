@@ -29,7 +29,7 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     ,orbit_object{}
     ,m_view_transform{glm::translate(glm::fmat4{}, glm::fvec3{0.0f, 0.0f, 4.0f})}
     ,m_view_projection{utils::calculate_projection_matrix(initial_aspect_ratio)}
-    ,cellShading_Mode{false}
+    //,cellShading_Mode{false}
     ,skybox_object{}
 {
     initializeGeometry();
@@ -155,16 +155,12 @@ void ApplicationSolar::makeTexture(std::shared_ptr<GeometryNode> const& object){
 }
 
 void ApplicationSolar::initializeSkyBox() {
-    /* used as reference :
-    https://learnopengl.com/Advanced-OpenGL/Cubemaps
-    */
-    std::cout << "Loading Skybox textures..." << std::endl;
+    std::cout << "Skybox Blue Loading" << std::endl;
     // load the textures for the skybox
     // try with sequence they are looped through
     //  RIGHT
     pixel_data sideright = texture_loader::file(m_resource_path + "textures/skybox/right.png");
     skybox_contain_pixdata_.push_back(sideright);
-
     // LEFT
     pixel_data sideleft = texture_loader::file(m_resource_path + "textures/skybox/left.png");
     skybox_contain_pixdata_.push_back(sideleft);
@@ -584,16 +580,16 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
     else if (key == GLFW_KEY_LEFT_SHIFT  && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
         m_view_transform = glm::translate(m_view_transform, glm::fvec3{0.0f, -0.1f, 0.0f});
     }
-    else if (key == GLFW_KEY_1 && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        if(cellShading_Mode == true) {
-            cellShading_Mode = false;
-        }
-    }
-    else if (key == GLFW_KEY_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-        if(cellShading_Mode == false) {
-            cellShading_Mode = true;
-        }
-    }
+    //    else if (key == GLFW_KEY_1 && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    //        if(cellShading_Mode == true) {
+    //            cellShading_Mode = false;
+    //        }
+    //    }
+    //    else if (key == GLFW_KEY_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+    //        if(cellShading_Mode == false) {
+    //            cellShading_Mode = true;
+    //        }
+    //    }
     glUseProgram(m_shaders.at("planet").handle);
     uploadView("planet");
     uploadProjection("planet");
