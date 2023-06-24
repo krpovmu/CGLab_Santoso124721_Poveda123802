@@ -68,7 +68,7 @@ void ApplicationSolar::initializeSolarSystem(){
     makePlanet("neptune", root_node_pointer, 0.3f, 0.04f, 10.0f, glm::fvec3{0.69f, 0.93f, 0.93f},"neptune.png", 9);
     makePlanet("pluto", root_node_pointer, 0.04f, 0.06f, 10.5f, glm::fvec3{65, 105, 225},"pluto.png", 10);
 
-    // moons
+    // moon
     std::shared_ptr<Node> earthHolderPtr = root_node_pointer->getChild("earth holder");
     makePlanet("moon", earthHolderPtr, 1.0f, 1.3f, 0.6f, glm::fvec3{0.83f, 0.83f, 0.83f},"moon.png", 11);
 
@@ -132,16 +132,12 @@ void ApplicationSolar::makeTexture(std::shared_ptr<GeometryNode> const& object){
     glActiveTexture(GL_TEXTURE0 + object->getIndex());
 
     // create texture object
-    texture_object t;
-    t.target = GL_TEXTURE_2D;
+    texture_object tex;
+    tex.target = GL_TEXTURE_2D;
     // generate texture names
-    glGenTextures(1, &t.handle);
-    glBindTexture(t.target, t.handle);
-    std::cout << object->getName() + " => ";
-    std::cout << t.target;
-    std::cout << " => ";
-    std::cout << t.handle << std::endl;
-    object->setTextureObject(t);
+    glGenTextures(1, &tex.handle);
+    glBindTexture(tex.target, tex.handle);
+    object->setTextureObject(tex);
 
     // define texture sampling parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -250,6 +246,7 @@ void ApplicationSolar::initializeStars(){
 void ApplicationSolar::render() const {
     // render Skybox
     renderSkybox();
+
     // render stars
     renderStars();
     // render lightnodes
@@ -323,7 +320,7 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
     if (planet->getParent()->getIsLight() == true) {
         glUniform3f(temp_ambient, 1.0f, 1.0f, 1.0f);
     } else {
-        glUniform3f(temp_ambient, 0.6f, 0.6f, 0.6f);
+        glUniform3f(temp_ambient, 0.3f, 0.3f, 0.3f);
     }
 
     // access texture
