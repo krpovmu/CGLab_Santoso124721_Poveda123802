@@ -38,6 +38,10 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
     initializeStars();
     initializeSkyBox();
     initializeOrbits();
+    // =====================================================
+    // Assignment 5
+    initializeFrameBuffer(initial_resolution.x, initial_resolution.y);
+    // =====================================================
 }
 
 ApplicationSolar::~ApplicationSolar() {
@@ -123,7 +127,6 @@ void ApplicationSolar::makePlanet(std::string const& name, std::shared_ptr<Node>
     solarSystem_.addPlanet(planet_pointer);
     makeTexture(planet_pointer);
 }
-
 
 void ApplicationSolar::makeTexture(std::shared_ptr<GeometryNode> const& object){
     // load texture
@@ -243,6 +246,71 @@ void ApplicationSolar::initializeStars(){
     star_object.num_elements = GLsizei(stars_.size() / 6);
 }
 
+void ApplicationSolar::initializeOrbits()
+{
+    std::vector<float> orbits;
+    int points_in_circle = 360;
+
+    for (int i = 0; i < points_in_circle; ++i) {
+        GLfloat x = cos(i * 3.14159265358979323846 / 180); //calculating points on a circle in right order
+        GLfloat y = 0;
+        GLfloat z = sin(i * 3.14159265358979323846 / 180);
+        orbits.push_back(x);
+        orbits.push_back(y);
+        orbits.push_back(z);
+    }
+
+    //Same as in draw stars
+    glGenVertexArrays(1, &orbit_object.vertex_AO);
+    glBindVertexArray(orbit_object.vertex_AO);
+
+    glGenBuffers(1, &orbit_object.vertex_BO);
+    glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
+    glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(sizeof(float) * orbits.size()), orbits.data(), GL_STATIC_DRAW);
+
+    //Attributes - index, size(3-dimensional), dtype, normalize data, byte-distance, offsets in bytes
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float) * 3), 0);
+
+    orbit_object.draw_mode = GL_LINE_LOOP;
+    orbit_object.num_elements = GLsizei(points_in_circle);
+
+}
+
+void ApplicationSolar::initializeFrameBuffer(int width, int height) {
+    // create framebuffer object
+    glGenFramebuffers(1, &framebuffer.handle);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.handle);
+
+    // create color attachment as texture object
+    texture_object color_buffer;
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color_buffer.handle, 0);
+    framebuffer.color_buffer = color_buffer;
+
+    // create depth attachment as renderbuffer
+    glGenRenderbuffers(1, &framebuffer.depth_handle);
+    glBindRenderbuffer(GL_RENDERBUFFER, framebuffer.depth_handle);
+    // ERROR? - GL_DEBUG_SEVERITY_LOW - GL_DEBUG_TYPE_OTHER: Framebuffer detailed info: The driver allocated storage for renderbuffer 1.
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, GLsizei(width), GLsizei(height));
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, framebuffer.depth_handle);
+
+    // define which buffers to write
+    GLenum draw_buffers[1] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, draw_buffers);
+
+    // check whether the framebuffer can be written
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "FRAMGEBUFFER DED!" << std::endl;
+    }
+    else {
+        std::cout << "FRAMEBUFFER ON!" << std::endl;
+    }
+}
+
+void ApplicationSolar::initializeFullscreenQuad() {
+
+}
+
 void ApplicationSolar::render() const {
     // render Skybox
     renderSkybox();
@@ -345,37 +413,6 @@ void ApplicationSolar::renderPlanet(std::shared_ptr<GeometryNode> planet)const{
     planet->getParent()->setWorldTransform(planetWorldTransform);
 }
 
-void ApplicationSolar::initializeOrbits()
-{
-    std::vector<float> orbits;
-    int points_in_circle = 360;
-
-    for (int i = 0; i < points_in_circle; ++i) {
-        GLfloat x = cos(i* 3.14159265358979323846 /180); //calculating points on a circle in right order
-        GLfloat y = 0;
-        GLfloat z = sin(i* 3.14159265358979323846 /180);
-        orbits.push_back(x);
-        orbits.push_back(y);
-        orbits.push_back(z);
-    }
-
-    //Same as in draw stars
-    glGenVertexArrays(1, &orbit_object.vertex_AO);
-    glBindVertexArray(orbit_object.vertex_AO);
-
-    glGenBuffers(1, &orbit_object.vertex_BO);
-    glBindBuffer(GL_ARRAY_BUFFER, orbit_object.vertex_BO);
-    glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(sizeof(float)*orbits.size()), orbits.data(), GL_STATIC_DRAW);
-
-    //Attributes - index, size(3-dimensional), dtype, normalize data, byte-distance, offsets in bytes
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GLsizei(sizeof(float)*3), 0);
-
-    orbit_object.draw_mode = GL_LINE_LOOP;
-    orbit_object.num_elements = GLsizei(points_in_circle);
-
-}
-
 void ApplicationSolar::renderOrbits() const
 {
     //go through planets and get distance and set as radius -> scale of circle. not yet correct
@@ -400,7 +437,6 @@ void ApplicationSolar::renderSkybox() const {
     glDrawElements(skybox_object.draw_mode, skybox_object.num_elements, model::INDEX.type, NULL);
     glDepthMask(GL_TRUE);
 }
-
 
 void ApplicationSolar::uploadView(std::string shader_name) {
     // vertices are transformed in camera space, so camera transform must be inverted

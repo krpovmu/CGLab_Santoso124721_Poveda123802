@@ -34,9 +34,26 @@ public:
     void renderOrbits() const;
     void renderSkybox() const;
 
+    // Assignment 5
+    void renderFullscreenquad() const;
+
 protected:
     void initializeShaderPrograms();
     void initializeGeometry();
+
+    // =====================================================
+    // Assignment 5
+    // initialize the Frame Buffer
+    void initializeFrameBuffer(int width, int height);
+    // fullscreen quad
+    void initializeFullscreenQuad();
+
+    model_object fullscreen_quad;
+
+    framebuffer_object framebuffer;
+
+    // =====================================================
+
     // update uniform values
     void uploadUniforms();
     // upload projection matrix
