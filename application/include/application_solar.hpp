@@ -34,8 +34,10 @@ public:
     void renderOrbits() const;
     void renderSkybox() const;
 
+    // =====================================================
     // Assignment 5
     void renderFullscreenquad() const;
+    // =====================================================
 
 protected:
     void initializeShaderPrograms();
@@ -105,6 +107,15 @@ protected:
 private:
     SceneGraph solarSystem_;
     std::vector<float> stars_;
+    
+    // Set a boolean for action for the postprocessing
+    bool horizontal_mirroring = false;
+    bool vertical_mirroring = false;
+    bool greyscale = false;
+    bool blur = false;
+    bool moving_time = true;
+    unsigned img_width;
+    unsigned img_height;
 };
 
 #endif

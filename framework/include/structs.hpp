@@ -51,6 +51,7 @@ struct framebuffer_object {
 
 	// color attachment
 	texture_object color_buffer;
+	GLuint color_handle = 0;
 
 	// depth attachment
 	GLuint depth_handle;
