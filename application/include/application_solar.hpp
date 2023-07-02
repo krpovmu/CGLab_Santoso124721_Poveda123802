@@ -47,13 +47,13 @@ protected:
     // Assignment 5
     // initialize the Frame Buffer
     void initializeFrameBuffer(int width, int height);
+    
     // fullscreen quad
     void initializeFullscreenQuad();
 
     model_object fullscreen_quad;
 
     framebuffer_object framebuffer;
-
     // =====================================================
 
     // update uniform values
@@ -111,8 +111,8 @@ private:
     // Set a boolean for action for the postprocessing
     bool horizontal_mirroring = false;
     bool vertical_mirroring = false;
-    bool greyscale = false;
-    bool blur = false;
+    bool greyscale_mode = false;
+    bool blur_mode = false;
     bool moving_time = true;
     unsigned img_width;
     unsigned img_height;

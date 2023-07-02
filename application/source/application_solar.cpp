@@ -387,17 +387,17 @@ void ApplicationSolar::initializeFrameBuffer(int width, int height) {
 void ApplicationSolar::initializeFullscreenQuad() {
     // triangles
     std::vector<GLfloat> quad = {
-        //v4
-        -1.0f, 1.0f, 0.0f, 1.0f,
         //v1
-        -1.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f, 1.0f,
         //v2
+        -1.0f, -1.0f, 0.0f, 0.0f,
+        //v3
         1.0f, -1.0f, 1.0f, 0.0f,
         //v4
         -1.0f, 1.0f, 0.0f, 1.0f,
-        //v2
+        //v5
         1.0f, -1.0f, 1.0f, 0.0f,
-        //v3
+        //v6
         1.0f, 1.0f, 1.0f, 1.0f
     };
 
@@ -419,7 +419,7 @@ void ApplicationSolar::initializeFullscreenQuad() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, GLsizei(4 * sizeof(float)), (void*)(2 * sizeof(float)));
 
     //specify the draw mode and the number of elements
-    fullscreen_quad.draw_mode = GL_TRIANGLE_STRIP;
+    fullscreen_quad.draw_mode = GL_TRIANGLES;
     fullscreen_quad.num_elements = GLsizei(quad.size() / 4);
 
     /*// generate vertex array object
@@ -476,7 +476,7 @@ void ApplicationSolar::render() const {
 
     // =====================================================
     // Assignment 5
-    //render to default for display
+    // Render changed to default to display screen
     std::cout << "==============SWITCH TO DEFAULT TO RENDER TO SCREEN==============" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -637,16 +637,18 @@ void ApplicationSolar::renderSkybox() const {
 }
 
 void ApplicationSolar::uploadView(std::string shader_name) {
-    
+    // =====================================================
+    // Assignment 5
     if (shader_name == "screen_quad") {
         glUseProgram(m_shaders.at("screen_quad").handle);
 
         glUniform1i(m_shaders.at("screen_quad").u_locs.at("horizontal_Mirroring"), horizontal_mirroring);
         glUniform1i(m_shaders.at("screen_quad").u_locs.at("vertical_Mirroring"), vertical_mirroring);
-        glUniform1i(m_shaders.at("screen_quad").u_locs.at("greyscale"), greyscale);
-        glUniform1i(m_shaders.at("screen_quad").u_locs.at("blur"), blur);
+        glUniform1i(m_shaders.at("screen_quad").u_locs.at("greyscale_mode"), greyscale_mode);
+        glUniform1i(m_shaders.at("screen_quad").u_locs.at("blur_mode"), blur_mode);
         glUniform2f(m_shaders.at("screen_quad").u_locs.at("texture_Size"), img_width, img_height);
     }
+    // =====================================================
     else {
         // vertices are transformed in camera space, so camera transform must be inverted
         glm::fmat4 view_matrix = glm::inverse(m_view_transform);
@@ -742,8 +744,8 @@ void ApplicationSolar::initializeShaderPrograms() {
     m_shaders.at("screen_quad").u_locs["screen_Texture"] = -1;
     m_shaders.at("screen_quad").u_locs["horizontal_Mirroring"] = 0;
     m_shaders.at("screen_quad").u_locs["vertical_Mirroring"] = 0;
-    m_shaders.at("screen_quad").u_locs["greyscale"] = 0;
-    m_shaders.at("screen_quad").u_locs["blur"] = 0;
+    m_shaders.at("screen_quad").u_locs["greyscale_mode"] = 0;
+    m_shaders.at("screen_quad").u_locs["blur_mode"] = 0;
     m_shaders.at("screen_quad").u_locs["texture_Size"] = -1;
     // =====================================================
 }
@@ -863,7 +865,7 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
     }
     // post-processing
     else if (key == GLFW_KEY_7 && (action == GLFW_PRESS)) {
-        greyscale = !greyscale;
+        greyscale_mode = !greyscale_mode;
     }
     else if (key == GLFW_KEY_8 && (action == GLFW_PRESS)) {
         horizontal_mirroring = !horizontal_mirroring;
@@ -872,7 +874,7 @@ void ApplicationSolar::keyCallback(int key, int action, int mods) {
         vertical_mirroring = !vertical_mirroring;
     }
     else if (key == GLFW_KEY_0 && (action == GLFW_PRESS)) {
-        blur = !blur;
+        blur_mode = !blur_mode;
     }
     // =====================================================
 

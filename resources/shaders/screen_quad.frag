@@ -10,8 +10,8 @@ uniform vec2 texture_Size;
 
 uniform bool horizontal_Mirroring;
 uniform bool vertical_Mirroring;
-uniform bool greyscale;
-uniform bool blur;
+uniform bool greyscale_mode;
+uniform bool blur_mode;
 
 vec2 tex_coords = pass_TexCoord;
 
@@ -25,7 +25,7 @@ void main() {
         tex_coords.x = 1.0 - tex_coords.x;
     }
 
-    if (blur) {
+    if (blur_mode) {
 
         vec2 pixel_Size = vec2(1.0, 1.0) / texture_Size;
 
@@ -55,7 +55,7 @@ void main() {
         out_Color = texture(screen_Texture, tex_coords);
     }
 
-    if (greyscale) {
+    if (greyscale_mode) {
         float luminance = (0.2126 * out_Color.r+0.7152 * out_Color.g+0.0722 * out_Color.b);
         out_Color = vec4(luminance, luminance, luminance, 1.0);
     }
